@@ -1,0 +1,52 @@
+@GameCatalog_HostAddress = http://localhost:5062
+
+GET http://localhost:5062/Games
+
+###
+POST http://localhost:5062/Games
+Content-Type: application/json
+
+{
+    "Title" : "Celest",
+    "Price" : 14.99,
+    "Publisher" : "Team Butt"
+}
+
+###
+PUT {{GameCatalog_HostAddress}}/Games/1
+Content-Type: application/json
+
+{
+    "Title": "Elden Ring",
+    "Price": 59.99,
+    "Publisher": "Bandai Namco"
+}
+
+###
+DELETE http://localhost:5062/Games/2
+
+###
+GET http://localhost:5062/Movies
+
+###
+POST http://localhost:5062/Movies
+Content-Type: application/json
+
+{
+    "Title" : "Odyssey",
+    "Genre" : "Drama",
+    "ReleaseYear" : 2026
+}
+
+###
+PUT http://localhost:5062/Movies/2
+Content-Type: application/json
+
+{
+    "Title" : "The Drama",
+    "Genre" : "Drama",
+    "ReleaseYear" : 2026
+}
+
+###
+DELETE http://localhost:5062/Movies/2
