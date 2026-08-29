@@ -54,7 +54,7 @@ This is a learning project built as part of a self-taught path toward a software
 
 ```bash
 # Clone the repository
-git clone git@github.com:Lucj0/GameCatalog.git
+git clone https://github.com/Lucj0/GameCatalog.git
 cd GameCatalog
 
 # Restore dependencies
