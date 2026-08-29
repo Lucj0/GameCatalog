@@ -1,12 +1,9 @@
-namespace GameCatalog.Entities;
+namespace GameCatalog.DTOs;
 
-public class Game
+public class GameDto
 {
-    public int Id { get; set; }
-
+    public int Id { get ; set; }
     public string Title { get; set; }
-    
     public decimal Price { get; set; }
-
     public string Publisher { get; set; }
 }

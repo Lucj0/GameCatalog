@@ -1,5 +1,6 @@
 using GameCatalog.Entities;
 using GameCatalog.Data;
+using GameCatalog.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,15 +18,23 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Movie>>> GetMovies()
+    public async Task<ActionResult<List<MovieDto>>> GetMovies()
     {
         var movies = await _context.Movies.ToListAsync();
 
-        return Ok(movies);
+        var movieDtos = movies.Select(movie => new MovieDto
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Genre = movie.Genre,
+            ReleaseYear = movie.ReleaseYear
+        }).ToList();
+
+        return Ok(movieDtos);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Movie>> GetMovie(int id)
+    public async Task<ActionResult<MovieDto>> GetMovie(int id)
     {
         var movie = await _context.Movies.FindAsync(id);
 
@@ -34,20 +43,43 @@ public class MoviesController : ControllerBase
             return NotFound();
         }
 
-        return Ok(movie);
+        var movieDto = new MovieDto
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Genre = movie.Genre,
+            ReleaseYear = movie.ReleaseYear
+        };
+
+        return Ok(movieDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Movie>> CreateMovie(Movie movie)
+    public async Task<ActionResult<MovieDto>> CreateMovie(CreateMovieDto movieDto)
     {
+        var movie = new Movie
+        {
+            Title = movieDto.Title,
+            Genre = movieDto.Genre,
+            ReleaseYear = movieDto.ReleaseYear
+        };
+        
         _context.Movies.Add(movie);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
+        var movieToReturn = new MovieDto
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Genre = movie.Genre,
+            ReleaseYear = movie.ReleaseYear
+        };
+
+        return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movieToReturn);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateMovie(int id, Movie incomingMovie)
+    public async Task<ActionResult> UpdateMovie(int id, UpdateMovieDto incomingMovie)
     {
         var existingMovie = await _context.Movies.FindAsync(id);
 

@@ -7,9 +7,9 @@ POST http://localhost:5062/Games
 Content-Type: application/json
 
 {
-    "Title" : "Celest",
-    "Price" : -1000,
-    "Publisher" : "Team Butt"
+    "Title" : "DK Bananza",
+    "Price" : 59.99,
+    "Publisher" : "Nintendo"
 }
 
 ###
@@ -17,9 +17,9 @@ PUT {{GameCatalog_HostAddress}}/Games/1
 Content-Type: application/json
 
 {
-    "Title": "Elden Ring",
-    "Price": 59.99,
-    "Publisher": "Bandai Namco"
+    "Title": "E33",
+    "Price": 39.99,
+    "Publisher": "Sandfall Interactive"
 }
 
 ###
@@ -33,13 +33,13 @@ POST http://localhost:5062/Movies
 Content-Type: application/json
 
 {
-    "Title" : "Odyssey",
-    "Genre" : "Drama",
+    "Title" : "Spider-Man",
+    "Genre" : "Superhero, Action",
     "ReleaseYear" : 2026
 }
 
 ###
-PUT http://localhost:5062/Movies/2
+PUT http://localhost:5062/Movies/1
 Content-Type: application/json
 
 {

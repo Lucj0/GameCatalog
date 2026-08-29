@@ -1,5 +1,6 @@
 using GameCatalog.Entities;
 using GameCatalog.Data;
+using GameCatalog.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,15 +18,23 @@ public class GamesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Game>>> GetGames()
+    public async Task<ActionResult<List<GameDto>>> GetGames()
     {
         var games = await _context.Games.ToListAsync();
 
-        return Ok(games);
+        var gameDtos = games.Select(game => new GameDto
+        {
+            Id = game.Id,
+            Title = game.Title,
+            Price = game.Price,
+            Publisher = game.Publisher
+        }).ToList();
+
+        return Ok(gameDtos);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Game>> GetGame(int id)
+    public async Task<ActionResult<GameDto>> GetGame(int id)
     {
         var game = await _context.Games.FindAsync(id);
 
@@ -34,20 +43,43 @@ public class GamesController : ControllerBase
             return NotFound();
         }
 
-        return Ok(game);
+        var gameDto = new GameDto
+        {
+            Id = game.Id,
+            Title = game.Title,
+            Price = game.Price,
+            Publisher = game.Publisher
+        };
+
+        return Ok(gameDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Game>> CreateGame(Game game)
+    public async Task<ActionResult<GameDto>> CreateGame(CreateGameDto gameDto)
     {
+        var game = new Game
+        {
+            Title = gameDto.Title,
+            Price = gameDto.Price,
+            Publisher = gameDto.Publisher
+        };
+
         _context.Games.Add(game);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetGame), new { id = game.Id }, game);
+        var gameToReturn = new GameDto
+        {
+            Id = game.Id,
+            Title = game.Title,
+            Price = game.Price,
+            Publisher = game.Publisher
+        };
+
+        return CreatedAtAction(nameof(GetGame), new { id = game.Id }, gameToReturn);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateGame(int id, Game incomingGame)
+    public async Task<ActionResult> UpdateGame(int id, UpdateGameDto incomingGame)
     {
         var existingGame = await _context.Games.FindAsync(id);
 
