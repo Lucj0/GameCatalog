@@ -220,4 +220,55 @@ public class GamesIntegrationTests
             Assert.Null(gameInDb);
         }
     }
+
+    [Fact]
+    public async Task CreateGame_WithInvalidTitleInput_ReturnsBadRequest()
+    {
+        //Arrange
+        var factory = new GameCatalogFactory();
+        var client = factory.CreateClient();
+
+        var invalidGameDto = new CreateGameDto { Price = 59.99m, Publisher = "Bandai Namco" };
+
+        //Act
+        var response = await client.PostAsJsonAsync("/games", invalidGameDto);
+
+        //Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateGame_WithInvalidPriceInput_ReturnsBadRequest()
+    {
+        //Arrange
+        var factory = new GameCatalogFactory();
+        var client = factory.CreateClient();
+
+        var invalidGameDto = new CreateGameDto { Title = "Elden Ring", Price = -59.99m, Publisher = "Bandai Namco" };
+
+        //Act
+        var response = await client.PostAsJsonAsync("/games", invalidGameDto);
+
+        //Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateGame_WithOverpostedId_IgnoredIdAndReturnsCreated()
+    {
+        //Arrange
+        var factory = new GameCatalogFactory();
+        var client = factory.CreateClient();
+
+        var overPosted = new { Id = 999, Title = "Elden Ring", Price = 59.99m, Publisher = "Bandai Namco" };
+
+        //Act
+        var response = await client.PostAsJsonAsync("/games", overPosted);
+
+        //Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var returnedGame = await response.Content.ReadFromJsonAsync<GameDto>();
+        Assert.Equal(1, returnedGame.Id);
+    }
 }
