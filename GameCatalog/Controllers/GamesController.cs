@@ -17,6 +17,7 @@ public class GamesController : ControllerBase
         _context = context;
     }
 
+    // Use DTOs as a protection layer between client and database
     [HttpGet]
     public async Task<ActionResult<List<GameDto>>> GetGames()
     {

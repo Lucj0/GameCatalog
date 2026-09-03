@@ -15,18 +15,19 @@ public class GameCatalogFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
-            // 1. Remove the app's real DbContext registration
+            // Remove the app's real DbContext registration
             services.RemoveAll<DbContextOptions<GameCatalogContext>>();
 
-            // 2. Create and open a connection, kept alive
+            // 2. Create and open a connection, kept alive for lifetime of the factory
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            // 3. Register the DbContext to use that open connection
+            // Register the DbContext to use the open connection
             services.AddDbContext<GameCatalogContext>(options =>
                 options.UseSqlite(connection));
 
-            // 4. Build the schema in the in-memory database
+            // Fresh in-memory database has no tables.
+            // Build the schema in the in-memory database so the app's queries have something to hit
             var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<GameCatalogContext>();
